@@ -1,10 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 import pytest
-from hitbox.adapters.playwright import PlaywrightAdapter
-from hitbox. adapters.selenium import SeleniumAdapter
 from hitbox.engine import HitboxEngine
-
 
 @pytest.fixture
 def hitbox(request: pytest.FixtureRequest) -> HitboxEngine:
@@ -21,10 +18,12 @@ def hitbox(request: pytest.FixtureRequest) -> HitboxEngine:
 
     if "page" in request.fixturenames:
         page = request.getfixturevalue("page")
+        from hitbox.adapters.playwright import PlaywrightAdapter
         return HitboxEngine(adapter=PlaywrightAdapter(page), receipt_callback=_save_receipt)
 
     if "driver" in request.fixturenames:
         driver = request.getfixturevalue("driver")
+        from hitbox.adapters.selenium import SeleniumAdapter
         return HitboxEngine(adapter=SeleniumAdapter(driver), receipt_callback=_save_receipt)
 
     raise pytest.UsageError(
